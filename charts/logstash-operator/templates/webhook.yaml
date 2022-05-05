@@ -1,0 +1,107 @@
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  annotations:
+    cert-manager.io/inject-ca-from: {{ .Release.Namespace }}/{{ .Values.name }}-serving-cert
+  labels:
+  {{- include "logstash-operator.labels" . | nindent 4 }}
+  name: {{ .Values.name }}-mutating-webhook-configuration
+webhooks:
+- admissionReviewVersions:
+    - v1
+    - v1beta1
+  clientConfig:
+    service:
+      name: {{ .Values.name }}-webhook-service
+      namespace: {{ .Release.Namespace }}
+      path: /mutate-logger-m2-ru-v1-m2logstashpipeline
+  failurePolicy: Fail
+  name: mm2logstashpipeline.kb.io
+  rules:
+    - apiGroups:
+        - logger.m2.ru
+      apiVersions:
+        - v1
+      operations:
+        - CREATE
+        - UPDATE
+      resources:
+        - m2logstashpipelines
+  sideEffects: None
+- admissionReviewVersions:
+  - v1
+  - v1beta1
+  clientConfig:
+    service:
+      name: {{ .Values.name }}-webhook-service
+      namespace: {{ .Release.Namespace }}
+      path: /mutate-logger-m2-ru-v1-m2logstash
+      port: {{ .Values.webhook.service.port }}
+  name: mm2logstash.kb.io
+  rules:
+  - apiGroups:
+      - logger.m2.ru
+    apiVersions:
+      - v1
+    operations:
+      - CREATE
+      - UPDATE
+    resources:
+      - m2logstashes
+    scope: '*'
+  sideEffects: None
+
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  annotations:
+    cert-manager.io/inject-ca-from: {{ .Release.Namespace }}/{{ .Values.name }}-serving-cert
+  labels:
+  {{- include "logstash-operator.labels" . | nindent 4 }}
+  name: {{ .Values.name }}-validating-webhook-configuration
+webhooks:
+- admissionReviewVersions:
+    - v1
+    - v1beta1
+  clientConfig:
+    service:
+      name: {{ .Values.name }}-webhook-service
+      namespace: {{ .Release.Namespace }}
+      path: /validate-logger-m2-ru-v1-m2logstashpipeline
+  failurePolicy: Fail
+  name: vm2logstashpipeline.kb.io
+  rules:
+    - apiGroups:
+        - logger.m2.ru
+      apiVersions:
+        - v1
+      operations:
+        - CREATE
+        - UPDATE
+      resources:
+        - m2logstashpipelines
+  sideEffects: None
+- admissionReviewVersions:
+    - v1
+    - v1beta1
+  clientConfig:
+    service:
+      name: {{ .Values.name }}-webhook-service
+      namespace: {{ .Release.Namespace }}
+      path: /validate-logger-m2-ru-v1-m2logstash
+      port: {{ .Values.webhook.service.port }}
+  name: vm2logstash.kb.io
+  rules:
+  - apiGroups:
+      - logger.m2.ru
+    apiVersions:
+      - v1
+    operations:
+      - CREATE
+      - UPDATE
+    resources:
+      - m2logstashes
+    scope: '*'
+  sideEffects: None
