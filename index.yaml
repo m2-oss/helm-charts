@@ -1,0 +1,18 @@
+apiVersion: v1
+entries:
+  logstash-operator:
+  - apiVersion: v2
+    appVersion: v1.0.0
+    created: "2022-05-06T13:50:46.530825+03:00"
+    description: logstash-operator
+    digest: a496b712dabd63322a0adbfc276a1167936c75b218072df9b087c6aae9d0f92b
+    home: https://gitlab.m2.ru/
+    maintainers:
+    - email: byvshevsp@m2.ru
+      name: Sergey Byvshev
+    name: logstash-operator
+    type: application
+    urls:
+    - https://m2-oss.github.io/helm-charts/packages/logstash-operator-0.1.0.tgz
+    version: 0.1.0
+generated: "2022-05-06T13:50:46.529525+03:00"
