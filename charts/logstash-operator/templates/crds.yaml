@@ -1,5 +1,14 @@
 {{- if .Values.createCustomResource -}}
 {{- range $path, $bytes := .Files.Glob "crds/*.yaml" }}
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  labels:
+  {{- include "logstash-operator.labels" $ | nindent 4 }}
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.6.1
+    cert-manager.io/inject-ca-from: $(CERTIFICATE_NAMESPACE)/$(CERTIFICATE_NAME)
+  creationTimestamp: null
 {{ $.Files.Get $path }}
 ---
 {{- end }}
