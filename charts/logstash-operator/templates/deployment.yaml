@@ -40,14 +40,14 @@ spec:
           - --upstream=http://127.0.0.1:8080/
           - --logtostderr=true
           - --v=10
-          image: {{ .Values.operator.proxy.image }}
+          image: "{{ .Values.operator.proxy.image }}:{{ .Values.operator.proxy.tag }}"
           imagePullPolicy: {{ .Values.operator.proxy.imagePullPolicy }}
           resources:
           {{- toYaml .Values.resources | nindent 12 }}
         - name: {{ .Values.operator.manager.name }}
           securityContext:
           {{- toYaml .Values.securityContext | nindent 12 }}
-          image: {{ .Values.operator.manager.image }}
+          image: "{{ .Values.operator.manager.image }}:{{ .Values.operator.manager.tag }}"
           imagePullPolicy: {{ .Values.operator.proxy.imagePullPolicy }}
           args:
           - --health-probe-bind-address=:{{ .Values.livenessProbe.httpGet.port }}
